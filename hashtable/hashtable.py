@@ -14,13 +14,24 @@ class LinkedList:
     def __init__(self):
         self.head = None;
 
+    def checkNext(self, node):
+        if isinstance(HashTableEntry, node.next):
+            return True
+        else:
+            return False
+
     def __repr__(self):
         next_node = None
+        next_next_node = None
+        nodes = []
         if self.head == None:
             next_node = None
         else:
-            next_node = self.head.next
-        return f'[LinkedList] -> {self.head} -> {next_node}\n'
+            cur = self.head
+            while cur.next:
+                nodes.append(cur)
+                cur = cur.next
+        return f'[LinkedList] -> {[node for node in nodes]}\n'
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
 
@@ -206,7 +217,8 @@ class HashTable:
 
         while cur.next:
             if cur.key == key:
-                print(f'match found next: {cur.next}')
+                print(f'match found: {cur.value}')
+                print(f'next found: {cur.next}')
                 return cur.value
             cur = cur.next
 
@@ -253,15 +265,17 @@ if __name__ == "__main__":
         else:
             return False
 
-    ht = HashTable(8)
+    ht = HashTable(16)
     print(ht.storage)
 
     for i in range(25):
         ht.put(f"key-{i}", f"val-{i}")
+        return_value = ht.get(f"key-{i}")
+        print(return_value)
 
     print(ht.storage)
-    return_value = ht.get("key-25")
-    print(assertTrue(return_value, "val-25")
+    return_value = ht.get("key-18")
+    print(assertTrue(return_value, "val-18")
 )
  
 
