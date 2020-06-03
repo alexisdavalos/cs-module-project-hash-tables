@@ -8,7 +8,7 @@ class HashTableEntry:
         self.next = None
 
     def __repr__(self):
-        return f'({self.key}:{self.value})'
+        return f'<<{self.key}:{self.value}>>'
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
@@ -23,7 +23,9 @@ class HashTable:
 
     def __init__(self, capacity):
         self.capacity = capacity
-        self.buckets = [None] * capacity
+        self.linked_list = [None] * capacity
+
+        
 
     def __repr__(self):
         return f'({self.capacity}:{self.bucket})'
@@ -51,7 +53,7 @@ class HashTable:
         # Your code here
         # Formula for load factor = num of pairs/num of buckets
         pairs = 0
-        for node in self.buckets:
+        for node in self.linked_list:
             while node!= None and node.next!= None:
                 pairs+=1
         
@@ -76,17 +78,15 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
-        print(f'key in djb2: {key}')
-        if isinstance(key, str):
-            hash = len(key)
-        else:
-            hash = key
+        # print(f'key in djb2: {key}')
+       
+        hash = 5381
 
-        byte_array = str.encode('utf-8')
+        byte_array = key.encode('utf-8')
 
         for byte in byte_array:
             hash = ((hash * 33) ^ byte) % 0x100000000
-        print(f'hashed value: {hash}')
+        # print(f'hashed value: {hash}')
         return hash
 
 
@@ -109,28 +109,24 @@ class HashTable:
         # Your code here
         # print(f'given key: {key}')
         bucket_index = self.hash_index(key)
-        print(f'bucket index: {bucket_index}')
-        new_node = HashTableEntry(key, value)
         # checks the buckets index for key 
-        existing_node = self.buckets[bucket_index]
-        while existing_node != None:
-            # check if given key matches node key
-            if existing_node.key == key:
-                # if they match, update the value
-                self.buckets[bucket_index].value = value
-                return
-            # no key found
-            else:
-                # replace None w/ new node
-                self.buckets[bucket_index] = new_node
-                return
+        new_node = HashTableEntry(key, value)
+        existing_node = self.linked_list[bucket_index]
 
-        if existing_node == None:
-            self.buckets[bucket_index] = new_node
-            return new_node
-
-
-       
+        if existing_node:
+            last_node = None
+            while existing_node:
+                if existing_node.key == key:
+                    # found existing key, replace value
+                    existing_node.value = value
+                    return
+                last_node = existing_node
+                existing_node = existing_node.next
+            # if we get this far, we didn't find an existing key
+            # so just append the new node to the end of the bucket
+            last_node.next = new_node
+        else:
+            self.linked_list[bucket_index] = new_node
 
 
     def delete(self, key):
@@ -153,11 +149,11 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        for bucket in self.buckets:
-            if bucket == None:
-                return None
-            elif bucket.key == key:
-                return bucket.value
+        bucket_index = self.hash_index(key)
+        existing_node = self.linked_list[bucket_index]
+        if existing_node:
+            if existing_node != None and existing_node.key == key:
+                return existing_node.value
             else:
                 return None
 
@@ -174,14 +170,14 @@ class HashTable:
 
 
 if __name__ == "__main__":
-    ht = HashTable(8)
-    print(ht.buckets)
-    ht.put('first key', 'first value')
-    print(ht.buckets)
-    ht.put('second key', 'second value')
-    print(ht.buckets)
-    key = ht.get('first key')
-    print(f'get key: {key}')
+    ht = HashTable(10)
+    print(ht.linked_list)
+    # ht.put('first key', 'first value')
+    # # print(ht.linked_list)
+    # ht.put('second key', 'second value')
+    # # print(ht.linked_list)
+    
+    print("")
     # ht.put("line_1", "'Twas brillig, and the slithy toves")
     # ht.put("line_2", "Did gyre and gimble in the wabe:")
     # ht.put("line_3", "All mimsy were the borogoves,")
@@ -194,8 +190,26 @@ if __name__ == "__main__":
     # ht.put("line_10", "Long time the manxome foe he sought--")
     # ht.put("line_11", "So rested he by the Tumtum tree")
     # ht.put("line_12", "And stood awhile in thought.")
-    # print(ht.buckets)
+
+    ht.put("key-0", "val-0")
+    ht.put("key-1", "val-1")
+    ht.put("key-2", "val-2")
+    ht.put("key-3", "val-3")
+    ht.put("key-4", "val-4")
+    ht.put("key-5", "val-5")
+    ht.put("key-6", "val-6")
+    ht.put("key-7", "val-7")
+    ht.put("key-8", "val-8")
+    ht.put("key-9", "val-9")
+
+    key = ht.get("key-0")
+    print(ht.linked_list)
     print("")
+    print(f'get key: {key}')
+    # myNode = ht.get("line_12");
+    # print(f'my node: {myNode}')
+    print("")
+ 
 
     # # Test storing beyond capacity
     # for i in range(1, 13):
