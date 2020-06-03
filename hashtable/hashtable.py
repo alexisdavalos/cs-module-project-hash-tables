@@ -6,7 +6,6 @@ class HashTableEntry:
         self.key = key
         self.value = value
         self.next = None
-        self.index = None
 
     def __repr__(self):
         return f'({self.key}:{self.value})'
