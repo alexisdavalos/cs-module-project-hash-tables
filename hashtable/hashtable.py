@@ -8,7 +8,7 @@ class HashTableEntry:
         self.next = None
 
     def __repr__(self):
-        return f'<<({self.key},{self.value})>>'
+        return f'({self.key},{self.value}) ->'
 
 class LinkedList:
     def __init__(self):
@@ -28,7 +28,7 @@ class LinkedList:
         elif cur.next == None:
             nodes.append(cur)
         else:
-            while cur.next:
+            while cur:
                 nodes.append(cur)
                 cur = cur.next
         return f'[LinkedList] -> {[node for node in nodes]}\n'
@@ -130,22 +130,15 @@ class HashTable:
         """
         # The slot in the arr
         bucket_index = self.hash_index(key)
-     
-        # print(f'bucket index: {bucket_index}')
         # checks the buckets index for key 
         new_node = HashTableEntry(key, value)
         # node/value at the index slot
         cur = self.storage[bucket_index]
-        # print(f'existing node: {cur}')
-        # print(f'state of storage: {self.storage}')
         # check if slot's linked list is empty
         if cur.head == None:
             # adds new node to the linked list
             self.storage[bucket_index].head = new_node
-            # print(f'updated node:{cur.head}')
-            # print(f'state of storage: {self.storage}')
             self.items += 1
-            print(cur)
             return
 
         # if the head is not None, a node exists in that linked list
@@ -154,23 +147,23 @@ class HashTable:
         else:
             # check the first element of the list
             cur = self.storage[bucket_index].head
-            # print(f'current node:{cur}')
-            # print(f'current node next:{cur.next}')
             if cur.key == key:
                 cur.value = value
-                print(cur)
-            # traverse down the list since more elements exist
+                print(f'match found: {cur}')
             else:
-                while cur.next:
+            # traverse down the list since more elements exist
+                while cur:
                     # found key so replace it's value
                     if cur.key == key:
                         # print(f'found key: {cur.key} = {key}')
                         cur.value = value
                         # print(f'updated value: {cur.value} = {value}')
+                    # track previous node
+                    prev = cur
+                    # update current node
                     cur = cur.next
                 # otherwise add new node
-                cur.next = new_node
-                print(cur)
+                prev.next = new_node
                 self.items +=1
             
        
@@ -193,7 +186,7 @@ class HashTable:
             self.items -= 1
             return
 
-        while cur.next:
+        while cur:
             prev = cur
             cur = cur.next
             if cur.key == key:
@@ -219,10 +212,8 @@ class HashTable:
         if cur.key == key:
             return cur.value
 
-        while cur.next:
+        while cur:
             if cur.key == key:
-                print(f'node found: {cur}')
-                print(f'next found: {cur.next}')
                 return cur.value
             cur = cur.next
 
@@ -269,7 +260,7 @@ if __name__ == "__main__":
         else:
             return False
 
-    ht = HashTable(16)
+    ht = HashTable(8)
     print(ht.storage)
 
     for i in range(25):
@@ -278,8 +269,8 @@ if __name__ == "__main__":
         
 
     print(ht.storage)
-    return_value = ht.get("key-17")
-    print(assertTrue(return_value, "val-17")
+    return_value = ht.get("key-12")
+    print(assertTrue(return_value, "val-12")
 )
  
 
