@@ -21,13 +21,13 @@ class LinkedList:
             return False
 
     def __repr__(self):
-        next_node = None
-        next_next_node = None
         nodes = []
-        if self.head == None:
-            next_node = None
+        cur = self.head
+        if cur == None:
+            nodes.append(cur)
+        elif cur.next == None:
+            nodes.append(cur)
         else:
-            cur = self.head
             while cur.next:
                 nodes.append(cur)
                 cur = cur.next
@@ -135,16 +135,17 @@ class HashTable:
         # checks the buckets index for key 
         new_node = HashTableEntry(key, value)
         # node/value at the index slot
-        existing_node = self.storage[bucket_index]
-        # print(f'existing node: {existing_node}')
+        cur = self.storage[bucket_index]
+        # print(f'existing node: {cur}')
         # print(f'state of storage: {self.storage}')
         # check if slot's linked list is empty
-        if existing_node.head == None:
+        if cur.head == None:
             # adds new node to the linked list
             self.storage[bucket_index].head = new_node
-            # print(f'updated node:{existing_node.head}')
+            # print(f'updated node:{cur.head}')
             # print(f'state of storage: {self.storage}')
             self.items += 1
+            print(cur)
             return
 
         # if the head is not None, a node exists in that linked list
@@ -157,6 +158,7 @@ class HashTable:
             # print(f'current node next:{cur.next}')
             if cur.key == key:
                 cur.value = value
+                print(cur)
             # traverse down the list since more elements exist
             else:
                 while cur.next:
@@ -168,6 +170,8 @@ class HashTable:
                     cur = cur.next
                 # otherwise add new node
                 cur.next = new_node
+                print(cur)
+                self.items +=1
             
        
             # print(f'current node updated:{cur}')
@@ -217,7 +221,7 @@ class HashTable:
 
         while cur.next:
             if cur.key == key:
-                print(f'match found: {cur.value}')
+                print(f'node found: {cur}')
                 print(f'next found: {cur.next}')
                 return cur.value
             cur = cur.next
@@ -269,13 +273,13 @@ if __name__ == "__main__":
     print(ht.storage)
 
     for i in range(25):
+        print(i)
         ht.put(f"key-{i}", f"val-{i}")
-        return_value = ht.get(f"key-{i}")
-        print(return_value)
+        
 
     print(ht.storage)
-    return_value = ht.get("key-18")
-    print(assertTrue(return_value, "val-18")
+    return_value = ht.get("key-17")
+    print(assertTrue(return_value, "val-17")
 )
  
 
