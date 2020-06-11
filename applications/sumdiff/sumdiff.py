@@ -13,3 +13,12 @@ def f(x):
 
 # Your code here
 
+cache = {}
+for i in q:
+    addition = f(i) + f(i+1)
+    subtraction = f(i) - f(i+1)
+    print((addition, subtraction))
+    if addition == subtraction:
+        cache[i] = (i, i+1)
+    
+print(cache)
